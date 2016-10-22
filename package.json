@@ -1,0 +1,19 @@
+{
+  "name": "bulls-and-cows",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TomislavIvanov/Bulls-Cows.git"
+  },
+  "author": "Tomislav Ivanov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TomislavIvanov/Bulls-Cows/issues"
+  },
+  "homepage": "https://github.com/TomislavIvanov/Bulls-Cows#readme"
+}
