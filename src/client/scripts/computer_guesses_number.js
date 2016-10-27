@@ -6,9 +6,9 @@ var socket = io();
 			'<tr>' + 
 				'<td>' + rowsCount + '</td>' +
 				'<td>' + number + '</td>' + 
-				'<td><input id="txtBullsCount" type="text" /></td>' + 
-				'<td><input id="txtCowsCount" type="text" /></td>' +
-				'<td><input id="btnSendResponse" type="button" value="Submit"/></td>' +
+				'<td><input class="form-control" id="txtBullsCount" type="number" /></td>' + 
+				'<td><input class="form-control" id="txtCowsCount" type="number" /></td>' +
+				'<td><input class="btn btn-default" id="btnSendResponse" type="button" value="Submit"/></td>' +
 			'</tr>'
 		);
 		

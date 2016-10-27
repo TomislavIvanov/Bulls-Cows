@@ -1,0 +1,75 @@
+{% extends "mainLayout.nunjucks" %}
+
+{% block content %}
+<div class="container">
+		<div class="bs-docs-section">
+			<div class="row">
+				{% include "partials/logo.nunjucks" %}
+				<div class="col-lg-4">
+					<div class="page-header">
+						<p class="lead ">Guess number</p>
+					</div>
+					<div class="bs-component">
+						<div id="successMsgLbl" class="panel panel-success hidden">
+							<div class="panel-heading">
+								<h3 class="panel-title"></h3>
+							</div>
+							<div class="panel-body">
+								You guessed the number !!!
+							</div>
+						</div>
+						<div id="errorMsgLbl" class="alert alert-dismissible alert-danger hidden">
+							<p>Please enter valid number.</p>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-4">
+                </div>
+			</div>
+			<div class="row">
+				<div class="col-lg-4">
+                {% include "partials/notes.nunjucks" %}
+				</div>
+				<div class="col-lg-4">
+
+					<div class="bs-component">
+						<div class="input-group">
+							<input id="txtNumber" maxlength="4" type="text" class="form-control" id="inputNumber" placeholder="Enter suggestion"
+								disabled>
+							<span class="input-group-btn">
+							    <button id="btnSubmitNum" class="btn btn-default hidden" type="button">Submit number</button>
+                            </span>
+							<span class="input-group-btn">
+								<button id="btnStartGame" class="btn btn-default" type="button">Start new game</button>
+							</span>
+						</div>
+					</div>
+					<div class="bs-component">
+
+					</div>
+					<div class="bs-component">
+						<table id='informationLog' class="table table-striped table-hover hidden">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>Number</th>
+									<th>Bulls</th>
+									<th>Cows</th>
+								</tr>
+							</thead>
+							<tbody>
+
+							</tbody>
+						</table>
+					</div>
+
+				</div>
+				<div class="col-lg-4">
+				</div>
+			</div>
+		</div>
+	</div>
+    <!-- include bower componets -->
+    {% include "partials/bowerComponents.nunjucks" %}
+	<script src="/scripts/player_guesses_number.js"></script>
+{% endblock %} 

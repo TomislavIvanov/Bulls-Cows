@@ -1,0 +1,19 @@
+<!-- mainMenu.nunjucks -->
+<ul id="menu">
+    <li><div>Single player</div>
+    <ul>
+        <li><div>Player vs. Computer</div>
+            <ul> 
+                <li><div><a href="/player_guesses_number">Guess computer number</a></div></li>
+                <li><div><a href="/computer_guesses_number">Computer guesses your number</a></div></li>
+            </ul>
+        </li>
+    </ul>
+    </li>
+    <li><div>Multi player</div>
+    <ul>
+        <li><div><a href="/online_players">Find online player</a></div></li>
+        <li><div><a href="/nplayers_vs_computer">N Players vs. Computer</a></div></li>
+        </ul>
+    </li>
+</ul>   

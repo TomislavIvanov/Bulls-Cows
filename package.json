@@ -16,5 +16,16 @@
   "bugs": {
     "url": "https://github.com/TomislavIvanov/Bulls-Cows/issues"
   },
-  "homepage": "https://github.com/TomislavIvanov/Bulls-Cows#readme"
+  "homepage": "https://github.com/TomislavIvanov/Bulls-Cows#readme",
+  "devDependencies": {
+    "del": "^2.2.2",
+    "gulp-inject": "^4.1.0",
+    "gulp-jscs": "^4.0.0",
+    "gulp-jshint": "^2.0.2",
+    "gulp-nodemon": "^2.2.1",
+    "gulp-nunjucks-render": "^2.0.0",
+    "gulp-util": "^3.0.7",
+    "jshint-stylish": "^2.2.1",
+    "wiredep": "^4.0.0"
+  }
 }

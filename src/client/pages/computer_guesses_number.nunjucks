@@ -1,45 +1,32 @@
-<html xmlns="http://www.w3.org/1999/xhtml">
+{% extends "mainLayout.nunjucks" %}
 
-<head>
-	<link rel="stylesheet" type="text/css" href="styles/bootstrap.min.css">
-	<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
-	<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-		crossorigin="anonymous"></script>
-</head>
-
-<body>
+{% block content %}
 	<div class="container">
 		<div class="bs-docs-section">
 			<div class="row">
-				<div class="col-lg-4">
-					<div class="col-lg-8 col-md-7 col-sm-6">
-						<a href="/">
-							<img src="/imgs/cows_and_bulls.jpg" />
-						</a>
-					</div>
-				</div>
+				{% include "partials/logo.nunjucks" %}
 				<div class="col-lg-4">
 					<div class="page-header">
-						<h1>Computer guesses your number</h1>
+						<h3>Computer guesses your number</h3>
 					</div>
-					<div id="successMsgLbl" class="panel panel-success hidden">
+					<div id="successMsgLbl" class="panel panel-default hidden">
 						<div class="panel-heading">
 							<h3 class="panel-title"></h3>
 						</div>
 						<div class="panel-body">
-							You win !!!
+							Computer wins !!!
 						</div>
 					</div>
 					<div id="errorMsgLbl" class="alert alert-dismissible alert-danger hidden">
 						<p>Please enter valid number.</p>
 					</div>
-				</div>
+                </div>
 				<div class="col-lg-4">
-				</div>
+                </div>
 			</div>
 			<div class="row">
 				<div class="col-lg-4">
-
+                {% include "partials/notes.nunjucks" %}
 				</div>
 				<div class="col-lg-4">
 
@@ -47,7 +34,7 @@
 						<div class="input-group">
 							<input id="txtNumber" maxlength="4" type="text" class="form-control hidden" id="inputNumber" placeholder="Enter your number">
 							<span class="input-group-btn">
-							    <button id="btnSaveNum" class="btn btn-success hidden" type="button">Save number</button>
+							    <button id="btnSaveNum" class="btn btn-default hidden" type="button">Save number</button>
                             </span>
 							<span class="input-group-btn">
 								<button id="btnStartGame" class="btn btn-default" type="button">Start new game</button>
@@ -79,7 +66,6 @@
 			</div>
 		</div>
 	</div>
-	<script src="/computer_vs_player.js"></script>
-</body>
-
-</html>
+    <!-- include bower componets -->
+    {% include "partials/bowerComponents.nunjucks" %}
+	<script src="/scripts/computer_guesses_number.js"></script>{% endblock %}

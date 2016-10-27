@@ -4,6 +4,6 @@ module.exports = {
         playerVsPC: require('./player_vs_pc.js')
     },
     multiPlayer: {
-
+        
     }
 }

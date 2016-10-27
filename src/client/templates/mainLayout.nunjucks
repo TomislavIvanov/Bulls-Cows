@@ -1,0 +1,17 @@
+<!-- mainLayout.nunjucks -->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<link rel="stylesheet" type="text/css" href="/styles/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="/bower_components/jquery-ui/themes/base/jquery-ui.min.css">
+	<style>
+		.ui-menu { width: 150px; }
+	</style>
+</head>
+
+<body>
+		{% block content %} {% endblock %}
+		
+		</body>
+</html>

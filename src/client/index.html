@@ -1,82 +1,88 @@
+<!-- mainLayout.nunjucks -->
+
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
 	<link rel="stylesheet" type="text/css" href="/styles/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="/bower_components/jquery-ui/themes/base/jquery-ui.min.css">
+	<style>
+		.ui-menu { width: 150px; }
+	</style>
 </head>
 
 <body>
+		
 	<div class="container">
 		<div class="bs-docs-section">
 			<div class="row">
 				<div class="col-lg-4">
-					<div class="col-lg-8 col-md-7 col-sm-6">
-						<img src="/imgs/cows_and_bulls.jpg" />
-					</div>
 				</div>
 				<div class="col-lg-4">
 					<div class="page-header">
-						<h1>Bulls & Cows</h1>
-						<p class="lead ">Classical Bulgarian logical game with numbers</p>
+						<!-- logo.nunjucks -->
+<div class="col-lg-4">
+					<div class="page-header">
+						
+<div class="col-lg-4">
+    <div class="col-lg-8 col-md-7 col-sm-6">
+       <a href="/">
+		    <img src="/imgs/cows_and_bulls.jpg">
+	    </a>
+    </div>
+</div>
+						
 					</div>
-					<!--<div class="bs-component">
-						<a class="btn btn-primary btn-lg ">Start game</a>
-					</div>-->
 				</div>
-				<div class="col-lg-4">
+						
+					</div>
 				</div>
 			</div>
 		</div>
-
 		<div class="bs-docs-section">
-
-		</div>
-		<div class="bs-docs-section">
-			<div class="row">
-
-				<div class="col-lg-4">
-				</div>
-				<div class="col-lg-4">
-					<h2>Start game</h2>
-				</div>
-			</div>
 			<div class="row">
 				<div class="col-lg-4">
 				</div>
 				<div class="col-lg-4">
-					<div class="bs-component">
-						<div class="panel panel-default">
-							<div class="panel-heading">
-								<h3 class="panel-title">Single player</h3>
-							</div>
-							<div class="panel-body">
-								<a href="/player_vs_computer" class="btn btn-success">Guess computer number</a>
-							</div>
-							<div class="panel-body">
-								<a href="/computer_vs_player" class="btn btn-success">Computer guesses your number</a>
-							</div>
-						</div>
-						<div class="panel panel-default">
-							<div class="panel-heading">
-								<h3 class="panel-title">Multi player</h3>
-							</div>
-							<div class="panel-body">
-								<a href="/player_vs_player" class="btn btn-success">Player vs. player</a>
-							</div>
-						</div>
-						<div class="panel panel-default">
-							<div class="panel-heading">
-								<h3 class="panel-title">Join game</h3>
-							</div>
-							<div class="panel-body">
-								<a href="/join_game" class="btn btn-success">Player vs. Computer</a>
-							</div>
-						</div>
-					</div>
+					<h1>Bulls & Cows</h1>
+				</div>
+			</div>
+		</div>
+		<div class="bs-docs-section">
+			<div class="row">
+				<div class="col-lg-4">
+				</div>
+				<div class="col-lg-4">
+					<!-- mainMenu.nunjucks -->
+<ul id="menu">
+    <li><div>Single player</div>
+    <ul>
+        <li><div>Player vs. Computer</div>
+            <ul> 
+                <li><div><a href="/player_guesses_number">Guess computer number</a></div></li>
+                <li><div><a href="/computer_guesses_number">Computer guesses your number</a></div></li>
+            </ul>
+        </li>
+    </ul>
+    </li>
+    <li><div>Multi player</div>
+    <ul>
+        <li><div><a href="/online_players">Find online player</a></div></li>
+        <li><div><a href="/nplayers_vs_computer">N Players vs. Computer</a></div></li>
+        </ul>
+    </li>
+</ul>   
 				</div>
 			</div>
 		</div>
 	</div>
+		<script src="/bower_components/jquery/dist/jquery.min.js"></script>
+		<script src="/bower_components/jquery-ui/jquery-ui.min.js"></script>
+		<script>
+			$( function() {
+				$( "#menu" ).menu();
+			});
+		</script>
 
-</body>
-
+		
+		</body>
 </html>

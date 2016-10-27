@@ -1,18 +1,6 @@
 var socket = io();
 	
 	socket.on('number_information', function (info) {
-		function chooseRowStyle(bulls, cows) {
-			if(bulls === 0 && cows > 0) {
-				return 'warning'
-			} else if(bulls === 0 && cows === 0) {
-				return 'danger';
-			} else if(bulls > 0 && cows === 0) {
-				return 'success';
-			} else if(bulls > 0 && cows > 0) {
-				return 'info';
-			}
-		}
-
 		var numInfo = eval(info);
 		var rowsCount = $('#informationLog tr').length;
 		var bullsClass = numInfo.bulls > 0 ? 'warning' : '';
