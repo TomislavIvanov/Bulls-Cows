@@ -1,0 +1,25 @@
+{
+  "name": "Bulls-Cows",
+  "version": "0.0.0",
+  "homepage": "https://github.com/TomislavIvanov/Bulls-Cows",
+  "authors": [
+    "Tomislav Ivanov <tomislav878@gmail.com>"
+  ],
+  "keywords": [
+    "bulls"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bluebird": "~3.4.6",
+    "jquery-ui": "~1.12.1",
+    "jquery": "~3.1.1",
+    "socket.io-client": "~1.5.1"
+  }
+}
