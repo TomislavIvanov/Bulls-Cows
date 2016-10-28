@@ -3,81 +3,81 @@ var express = require('express'),
     http = require('http').Server(app),
     parser = require('body-parser'),
     path = require('path'),
+    exphbs = require('express-handlebars'),
+    io = require('socket.io')(http),
+    compression = require('compression'),
+    games = require('./game/games.js'),
+    playersList = {},
     port = 3000;
 
-app.use(parser.json());
-app.use(parser.urlencoded());
+// gzip compression
+app.use(compression());
 
-// add main routes
-require('./routes.js')(app, express);
-var games = require('./game/games.js');
+// Set handlebars as view engine
+app.engine('handlebars', exphbs({
+    defaultLayout: 'main',
+    layoutsDir: path.join(__dirname + '/../client/views/layouts')
+}));
+app.set('view engine', 'handlebars');
+app.set('views', path.join(__dirname + '/../client/views'));
 
-var playersList = {};
+// Set static resources
+app.use(express.static('./src/client/'));
+app.use('/bower_components', express.static('./bower_components'));
 
-var updatePlayersList = function (io) {
-    Object.keys(playersList).forEach(function (playerID, index, ids) {
-        var otherPlayers = ids
-            .filter(function (currentID) { return currentID !== playerID })
-            .map(function (currentID) {
-                return { id: currentID, name: playersList[currentID].name || currentID };
-            });
+// Set main routes
+app.get('/', function (req, res) {
+    res.render('home', { body: 'gosho' });
+}).get('/online_players', function (req, res) {
+    res.render('online-players', { body: 'gosho' });
+}).get('/player_guesses_number', function (req, res) {
+    res.render('player-guesses-number', { body: 'gosho' });
+}).get('/computer_guesses_number', function (req, res) {
+    res.render('computer-guesses-number', { body: 'gosho' });
+}).get('/playerVsPlayer/:playerID', function (req, res) {
+    ////res.render('player-vs-player', { otherPlayer: playersList[req.params.playerID].name });
+})
 
-        io.to(playerID).emit('online players', otherPlayers);
-    })
-}
-
-
-// Add addional route
-app.get('/playerVsPlayer/:playerID', function (req, res) {
-    var player = playersList[req.params.playerID];
-
-    // if(player) {
-        //console.log('You wanna play with' + playersList[req.params.playerID].name);
-        // res.sendFile(path.resolve(__dirname + '/../client/player_vs_player.html'));
-        res.sendFile('player_vs_player.html', { root: path.resolve(__dirname, '../client') });
-    // } else {
-    //     console.log('No such player');
-    // }
-});
-
-
-//TODO: change players list to array. Array is object so "in" operator will do the same thing like index oberator
-
-// TODO: add option to reuse connections 
-var io = require('socket.io')(http);
-
-// io.set('authorization', function(handshake, accept){
-//     var user = handshake._query;
-//     if(playersList[user.t])
-//         accept('User already connected', false);
-//     else
-//         accept(null, true);
-// });
-
-
+// Add sockets.io events callbacks
 io.on('connection', function (player) {
-    console.log('Player is connected ID:' + player.id);
-    // add to current connected users list
-    playersList[player.id] = { name: player.id };
-    // remove from list when disconnected       
-    player.on('disconnect', function () {
-        console.log('Player is disconnected : ' + player.id);
-        delete playersList[player.id];
+    console.log('New player is connected (ID: ' + player.id + ')');
+    console.log('Online players:' + Object.keys(playersList).length);
 
-        updatePlayersList(io);
+    // Add player to the list
+    playersList[player.id] = { name: player.id };
+
+    player.on('disconnect', function () {
+        console.log('Player is disconnected (ID: ' + player.id + ')');
+        // Remove from list when disconnected       
+        delete playersList[player.id];
+        // notify all clients except sender
+        player.broadcast.emit('player_disconected', player.id);
     });
 
     /* --------------  Online players  -------------------- */
+    player.on('save_nickname', function (nickName) {
+        var ids = Object.keys(playersList);
+        var playersCount = ids.length;
+        if (playersCount > 0) {
+            player.broadcast.emit('player_connected', { id: player.id, name: nickName || 'N/A' });
+            var onlinePlayers = ids
+                .filter(function (currentID) { return currentID !== player.id })
+                .map(function (currentID) {
+                    return { id: currentID, name: playersList[currentID].name || currentID };
+                });
 
-    player.on('set player name', function (userName) {
-        playersList[player.id].name = userName;
-        // playersList[player.id].name = userName;
-        updatePlayersList(io);
+            // TODO: add option to send response for each successfull message
+            // player.emit('message-received', nickName);
+            player.emit('online_players', onlinePlayers)
+        }
+
+        playersList[player.id].name = nickName;
     });
 
-    // TODO: some optimizations to be implemented like sending only one user not the whole list
-    // for each new connected user send the whole list of all online users to each other
-    // updatePlayersList(io);
+    player.on('player_offer_game', function (playerId) {
+        console.log('Player offer game ID:' + playerId);
+        io.to(playerId).emit('player_offer_game', { id: playerId, name: playersList[playerId].name });
+    });
 
     /* --------------  Computer guesses player number  -------------------- */
     player.on('start_game', function (fieldInfo) {
@@ -102,20 +102,6 @@ io.on('connection', function (player) {
         numInfo.actualNumber = number;
         player.emit('number_information', numInfo);
     });
-
-    /* ---------------------------------- */
-    player.on('end game', function () {
-        console.log('game over');
-    });
-
-    // player.on('disconnect', function () {
-    //     // delete playersList[player.id];
-    //     console.log('player disconnected');
-    //     setTimeout(function () { 
-    //         console.log('Delete player t:' + player.id);
-    //         delete playersList[player.id];
-    //     }, 5000)
-    // });
 });
 
 http.listen(port, function () {
@@ -123,4 +109,3 @@ http.listen(port, function () {
     console.log('listening on *:' + port);
 });
 
- 
