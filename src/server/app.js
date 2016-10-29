@@ -1,14 +1,15 @@
 var express = require('express'),
     app = express(),
     http = require('http').Server(app),
-    parser = require('body-parser'),
     path = require('path'),
     exphbs = require('express-handlebars'),
     io = require('socket.io')(http),
     compression = require('compression'),
-    games = require('./game/games.js'),
-    playersList = {},
     port = 3000;
+
+var games = require('./game/games.js'),
+    playersList = {};
+
 
 // gzip compression
 app.use(compression());
@@ -56,7 +57,7 @@ io.of('/player_vs_player').on('connection', function (player) {
     player
         .on('ready', function onPlayerReady() {
             multiPlayerUsers[player.id].isReady = true;
- 
+
             if (allPlayersAreReady(multiPlayerUsers)) {
                 io.of('/player_vs_player').emit('game_allowed');
             }
@@ -159,6 +160,6 @@ io.on('connection', function (player) {
 
 http.listen(port, function () {
     'use strict';
-    console.log('listening on *:' + port);
+    console.log('listening on port:' + port);
 });
 

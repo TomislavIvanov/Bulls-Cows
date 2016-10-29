@@ -1,6 +1,49 @@
 var socket;
-$('#btnSave').on('click', function (e) {
-    var nickName = $('#txtNickName').val();
+var playerNickName = localStorage['playerNickName'];
+// requir helpers
+
+
+function drawNotification(container, player) {
+    container.append(
+        '<div id="notification_' + player.id + '" class="alert alert-dismissible alert-warning">' +
+        player.name + ' want to play' +
+        '<input type="button" class="accepButton" value="Accept" />' +
+        '<input type="button" class="declineButton" value="Decline" />' +
+        '</div>'
+    );
+
+    // attach onclick callbacks
+    $('#notification_' + player.id + ' > input.accepButton').on('click', function (e) {
+        socket.emit('game_accepted', { source: { id: player.id }, target: { id: socket.id } });
+        window.location.href = '/playerVsPlayer/' + player.id;
+        $(this).parent().remove();
+    });
+
+    $('#notification_' + player.id + ' > input.declineButton').on('click', function (e) {
+        $(this).parent().remove();
+    });
+}
+
+function drawOfferGameLink(container, player) {
+    var onClick = "socket.emit('player_offer_game', '" + player.id + "')";
+    container.append(
+        '<li id="player_' + player.id + '">'
+        + '<input type="button" class="btn btn-link" onclick="' + onClick + ';" value="' + (player.name || player.id) + '" />' +
+        '</li>'
+    );
+}
+
+function onNickNameSaved(nickName) {
+    $('#currentUser').html('Hello <strong>' + nickName + '</strong> !!!');
+    $('#currentUser').removeClass('hidden');
+    $('#usersList').parent().removeClass('hidden');
+    $('#dialog').remove();
+
+    localStorage['playerNickName'] = nickName;
+}
+
+
+function registerPlayer(nickName) {
     // validate user name
     if (nickName) {
         socket = socket || io();
@@ -23,7 +66,7 @@ $('#btnSave').on('click', function (e) {
                 drawNotification($("#notificationsPanel"), player);
             })
             .on('redirect_to_multiplayer', function (playerID) {
-                window.location.href='/playerVsPlayer/' + playerID;
+                window.location.href = '/playerVsPlayer/' + playerID;
             })
             .on('player_connected', function (player) {
                 $('#msgWaitForPlayers').hide();
@@ -45,53 +88,26 @@ $('#btnSave').on('click', function (e) {
     } else {
         alert('Pleaser enter nickname');
     }
-});
+};
 
-var drawNotification = function (container, player) {
-    container.append(
-        '<div id="notification_' + player.id + '" class="alert alert-dismissible alert-warning">' +
-        player.name + ' want to play' +
-        '<input type="button" class="accepButton" value="Accept" />' +
-        '<input type="button" class="declineButton" value="Decline" />' +
-        '</div>'
-    );
-
-    // attach onclick callbacks
-    $('#notification_' + player.id + ' > input.accepButton').on('click', function (e) {
-        socket.emit('game_accepted', { source: { id: player.id }, target: { id: socket.id } });
-        window.location.href='/playerVsPlayer/' + player.id;        
-        $(this).parent().remove();
-    });
-
-    $('#notification_' + player.id + ' > input.declineButton').on('click', function (e) {
-        $(this).parent().remove();
-    });
-}
-
-var drawOfferGameLink = function (container, player) {
-    var onClick = "socket.emit('player_offer_game', '" + player.id + "')";
-    container.append(
-        '<li id="player_' + player.id + '">'
-        + '<input type="button" class="btn btn-link" onclick="' + onClick + ';" value="' + (player.name || player.id) + '" />'+
-        '</li>'
-    );
-}
-
-var onNickNameSaved = function (nickName) {
-    $('#currentUser').html('Hello <strong>' + nickName + '</strong> !!!');
+if (playerNickName) {
+    $('#currentUser').html('Hello <strong>' + playerNickName + '</strong> !!!');
     $('#currentUser').removeClass('hidden');
     $('#usersList').parent().removeClass('hidden');
-    $('#dialog').remove();
+    $('#dialog').addClass('hidden');
+    registerPlayer(playerNickName)
+} else {
+    // Show Dialog for userName
+    $('#dialog').removeClass('hidden');
+    $(function () {
+        $("#dialog").dialog();
+    });
 
-    localStorage['playerNickName'] = nickName;
+    // attach event handlers
+    $('#btnSave').on('click', function (e) {
+        var nickName = $('#txtNickName').val();
+        registerPlayer(nickName);
+    });
 }
 
-// Make online players list selectable
-$(function () {
-    $("#usersList").selectable();
-});
 
-// Show Dialog for userName
-$(function () {
-    $("#dialog").dialog();
-});

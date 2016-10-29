@@ -79,9 +79,6 @@ socket
         });
     });
 
-
-
-
 $('#btnStartGame').click(function () {
     $('#winGameMsgLbl').addClass('hidden');
     $('#lostGameMsgLbl').addClass('hidden');
