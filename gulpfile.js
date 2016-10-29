@@ -12,7 +12,7 @@ var del = require('del');
 
 gulp.task('default', ['start-project']);
 
-gulp.task('start-project', ['generate-markup'], function () {
+gulp.task('start-project', function () {
     logMessage('Start project with nodemon');
 
     var options = {
@@ -37,16 +37,6 @@ gulp.task('clean-markup', function () {
 
     var files = config.markupDestFolder + '/*.html';
     del(files);
-});
-
-gulp.task('generate-markup', ['clean-markup'], function () {
-    logMessage('Execute nunjuncks template enjine');
-
-    return gulp.src(config.nunjucksPages)
-        .pipe(nunjucksRender({
-            path: [config.nunjucksTemplates]
-        }))
-        .pipe(gulp.dest(config.markupDestFolder));
 });
 
 gulp.task('check-js', function () {

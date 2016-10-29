@@ -13,7 +13,6 @@
 		<div class="row">
 			<div class="col-lg-4">
 				<div class="page-header">
-
 					<div class="col-lg-4">
 						<div class="col-lg-8 col-md-7 col-sm-6">
 							<a href="/">
@@ -30,23 +29,51 @@
 					<div class="panel panel-default">
 						<div class="panel-body" class="hidden">
 							<ol id="usersList">
-								Waiting for {{{otherPlayer}}} response ...
+								You are playing versus <strong> {{{otherPlayer}}} </strong>...
 							</ol>
 						</div>
 					</div>
 				</div>
 			</div>
 			<div class="col-lg-4">
-
+				<div class="input-group">
+					<input id="txtNumber" maxlength="4" type="text" class="form-control hidden" id="inputNumber" placeholder="Enter your number">
+					<span class="input-group-btn">
+						<button id="btnSaveNum" class="btn btn-default hidden" type="button">Save number</button>
+                    </span>
+					<span class="input-group-btn">
+						<button id="btnStartGame" class="btn btn-default" type="button">Start new game</button>
+					</span>
+				</div>
+				<div id="submitNumSection" class="input-group">
+					<input id="inputNumber" maxlength="4" type="text" class="form-control hidden" placeholder="Enter suggestion">
+					<span class="input-group-btn">
+						<button id="btnSubmitNum" class="btn btn-default hidden" type="button">Submit number</button>
+                    </span>
+				</div>
 			</div>
 		</div>
 		<div class="row">
 			<div class="col-lg-4">
 			</div>
 			<div class="col-lg-4">
-
 				<div class="bs-component">
-
+					<div id="winGameMsgLbl" class="panel panel-success hidden">
+						<div class="panel-heading">
+							<h3 class="panel-title"></h3>
+						</div>
+						<div class="panel-body">
+							You win !!!
+						</div>
+					</div>
+					<div id="lostGameMsgLbl" class="panel panel-warning hidden">
+						<div class="panel-heading">
+							<h3 class="panel-title"></h3>
+						</div>
+						<div class="panel-body">
+							You lose :(
+						</div>
+					</div>
 				</div>
 				<div class="bs-component">
 
@@ -56,6 +83,7 @@
 						<thead>
 							<tr>
 								<th>#</th>
+								<th>Player</th>
 								<th>Number</th>
 								<th>Bulls</th>
 								<th>Cows</th>
@@ -75,3 +103,4 @@
 <script src="/bower_components/jquery/dist/jquery.min.js"></script>
 <script src="/bower_components/bluebird/js/browser/bluebird.min.js"></script>
 <script src="/bower_components/jquery-ui/jquery-ui.min.js"></script>
+<script src="/scripts/player_vs_player.js"></script>

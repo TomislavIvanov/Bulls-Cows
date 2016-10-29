@@ -35,8 +35,56 @@ app.get('/', function (req, res) {
 }).get('/computer_guesses_number', function (req, res) {
     res.render('computer-guesses-number', { body: 'gosho' });
 }).get('/playerVsPlayer/:playerID', function (req, res) {
-    ////res.render('player-vs-player', { otherPlayer: playersList[req.params.playerID].name });
+    var requestedPlayer = playersList[req.params.playerID];
+    if (requestedPlayer) {
+        res.render('player-vs-player', { otherPlayer: requestedPlayer.name });
+    }
 })
+
+var multiPlayerUsers = {};
+io.of('/player_vs_player').on('connection', function (player) {
+    multiPlayerUsers[player.id] = { id: player.id, isReady: false };
+    console.log('New player joins: ' + player);
+    console.log('Multi player user: ' + multiPlayerUsers);
+
+    function allPlayersAreReady(multiPlayerUsers) {
+        return !Object.keys(multiPlayerUsers).some(function (playerID) {
+            return !multiPlayerUsers[playerID].isReady;
+        });
+    }
+
+    player
+        .on('ready', function onPlayerReady() {
+            multiPlayerUsers[player.id].isReady = true;
+ 
+            if (allPlayersAreReady(multiPlayerUsers)) {
+                io.of('/player_vs_player').emit('game_allowed');
+            }
+        })
+        .on('opponent_win', function onLose() {
+            player.broadcast.emit('win_game');
+            Object.keys(multiPlayerUsers).forEach(function (playerID) {
+                multiPlayerUsers[playerID].isReady = false;
+            });
+        })
+        .on('match_result', function onMatchResultReceived(result) {
+            player.broadcast.emit('match_result', result);
+        })
+        .on('player_result', function onMatchResultReceived(result) {
+            player.broadcast.emit('match_result', { num: result, playerName: player.id });
+        })
+        .on('submit_number', function onNumberSubmited(info) {
+            player.broadcast.emit('suggested_number', info);
+        })
+
+    player.on('disconnect', function () {
+        console.log('Player leaves multiplayer game');
+        // Remove from list when disconnected       
+        delete multiPlayerUsers[player.id];
+        // notify all players except sender
+        //player.broadcast.emit('player_disconected', player.id);
+    });
+});
 
 // Add sockets.io events callbacks
 io.on('connection', function (player) {
@@ -47,18 +95,24 @@ io.on('connection', function (player) {
     playersList[player.id] = { name: player.id };
 
     player.on('disconnect', function () {
-        console.log('Player is disconnected (ID: ' + player.id + ')');
+        console.log('Player is disconnected (ID: ' + player.id + ') Name: ' + playersList[player.id].name);
         // Remove from list when disconnected       
         delete playersList[player.id];
         // notify all clients except sender
         player.broadcast.emit('player_disconected', player.id);
     });
 
-    /* --------------  Online players  -------------------- */
+    player.on('game_accepted', function onGameAccepted(playersInfo) {
+        // TODO: on redirect the old sockets are disconencted. Players have new sockets. Add option to save the names or somehow reuse the session
+        io.to(playersInfo.source.id).emit('redirect_to_multiplayer', playersInfo.target.id);
+    })
+
     player.on('save_nickname', function (nickName) {
         var ids = Object.keys(playersList);
         var playersCount = ids.length;
-        if (playersCount > 0) {
+
+        // Current player is the only one
+        if (playersCount > 1) {
             player.broadcast.emit('player_connected', { id: player.id, name: nickName || 'N/A' });
             var onlinePlayers = ids
                 .filter(function (currentID) { return currentID !== player.id })
@@ -66,17 +120,16 @@ io.on('connection', function (player) {
                     return { id: currentID, name: playersList[currentID].name || currentID };
                 });
 
-            // TODO: add option to send response for each successfull message
-            // player.emit('message-received', nickName);
             player.emit('online_players', onlinePlayers)
         }
 
+        // Set player nickName
         playersList[player.id].name = nickName;
     });
 
     player.on('player_offer_game', function (playerId) {
         console.log('Player offer game ID:' + playerId);
-        io.to(playerId).emit('player_offer_game', { id: playerId, name: playersList[playerId].name });
+        io.to(playerId).emit('player_offer_game', { id: player.id, name: playersList[player.id].name });
     });
 
     /* --------------  Computer guesses player number  -------------------- */
