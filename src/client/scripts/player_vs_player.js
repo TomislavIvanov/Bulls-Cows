@@ -1,8 +1,12 @@
-var socket = io('/player_vs_player');
-var playerNumber;
+var socket = io('/player_vs_player'),
+    nickName = localStorage['playerNickName'],
+    playerNumber;
 
-socket.emit('join_game', gameId);
+socket.emit('join_game', { gameId: gameId, playerName: nickName });
 socket
+    .on('opponent_nickname', function (opponentNickName) {
+        $('#oppnentName').html('You are playing against <strong>' +  opponentNickName + '</strong>')
+    })
     .on('game_allowed', function (info) {
         $('#btnSubmitNum').removeClass('hidden');
         $('#inputNumber').removeClass('hidden');
@@ -25,7 +29,7 @@ socket
         $('#informationLog').append(
             '<tr>' +
             '<td>' + rowsCount + '</td>' +
-            '<th>' + localStorage['playerNickName'] + '</th>' +
+            '<th>' + '<strong>YOU</strong>' + '</th>' +
             '<td>' + $('#inputNumber').val() + '</td>' +
             '<td class="' + bullsClass + '">' + info.num.bulls + '</td>' +
             '<td class="' + cowsClass + '">' + info.num.cows + '</td>' +

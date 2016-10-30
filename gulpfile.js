@@ -5,7 +5,6 @@ var config = require('./gulp.config');
 
 // plugins
 var gulpUtil = require('gulp-util');
-var nunjucksRender = require('gulp-nunjucks-render');
 var jshint = require('gulp-jshint');
 var nodemon = require('gulp-nodemon');
 var del = require('del');

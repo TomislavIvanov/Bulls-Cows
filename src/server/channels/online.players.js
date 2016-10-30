@@ -1,8 +1,8 @@
 var onlinePlayers = {};
 
 module.exports = function (io) {
-    var namespaceName = '/online_players';
-    io.of(namespaceName).on('connection', function (player) {
+    var channelName = '/online_players';
+    io.of(channelName).on('connection', function (player) {
         // get playerSocket id without the namespace preffix
         var playerId = player.id.split('#')[1];
         console.log('New player is connected (ID: ' + playerId + ')');
@@ -35,7 +35,7 @@ module.exports = function (io) {
             })
             .on('player_offer_game', function (opponentId) {
                 player.broadcast
-                    .to(namespaceName + '#' + opponentId)
+                    .to(channelName + '#' + opponentId)
                     .emit('player_offer_game', {
                         id: playerId,
                         name: onlinePlayers[playerId].name
