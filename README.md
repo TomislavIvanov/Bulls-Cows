@@ -16,7 +16,8 @@ Node.js project based on web sockets communication by socket.io framework.
 * Build system - gulp
 
 ### Instalation
-Just run 'npm install'
+- 'npm install'
+- 'npm install -g bower'
 
 ## Used technologies
 #### Server
