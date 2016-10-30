@@ -1,26 +1,27 @@
 <p align="center">
   <a href="#">
-    <img height="257" width="114" src="http://i.istockimg.com/file_thumbview_approve/9775581/3/stock-illustration-9775581-cow-and-bull-in-love.jpg">
+    <img height="257" src="http://i.istockimg.com/file_thumbview_approve/9775581/3/stock-illustration-9775581-cow-and-bull-in-love.jpg">
   </a>
-  <p align="center">Traditional bulgarian game with numbers</p>
 </p>
 
+# Bulls & Cows
 
-* [Game Wiki](https://en.wikipedia.org/wiki/Bulls_and_Cows)
+## Game Description
+Bulls and Cows (also known as Cows and Bulls or Pigs and Bulls or Bulls and Cleots) is an old code-breaking mind or paper and pencil game for two or more players, predating the similar commercially marketed board game Mastermind.
 
-# X & X
-
-### Description
-Bulls And Cows game
+## Project Description
+Node.js project based on web sockets communication by socket.io framework. 
+* Javascritp syntax - ES5.
+* Testing framework - Mocha
+* Build system - gulp
 
 ### Instalation
-- run add_dependencies.bat
+Just run install_dependencies.bat
 
-# Used technologies
+## Used technologies
 #### Server
 * [socket.io](http://socket.io/)
 * [express](http://expressjs.com/)
-* [bluebird](http://bluebirdjs.com/)
 
 #### UI libs
 * [jquery-ui](https://jqueryui.com/)
@@ -28,3 +29,6 @@ Bulls And Cows game
 
 #### Build system
 * [gulp](http://gulpjs.com/)
+
+### Resources 
+* [Bulls & Cows (Wikipedia)](https://en.wikipedia.org/wiki/Bulls_and_Cows)
