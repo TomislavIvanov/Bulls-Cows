@@ -14,8 +14,9 @@ function drawNotification(container, player) {
 
     // attach onclick callbacks
     $('#notification_' + player.id + ' > input.accepButton').on('click', function (e) {
-        socket.emit('game_accepted', { source: { id: player.id }, target: { id: socket.id } });
-        window.location.href = '/playerVsPlayer/' + player.id;
+        socket.emit('game_accepted', { hostPlayer: { id: player.id }, guestPlayer: { id: socket.id } });
+        var gameId = socket.id + '_vs_' + player.id; 
+        window.location.href = '/playerVsPlayer/' + gameId;
         $(this).parent().remove();
     });
 
@@ -46,7 +47,7 @@ function onNickNameSaved(nickName) {
 function registerPlayer(nickName) {
     // validate user name
     if (nickName) {
-        socket = socket || io();
+        socket = socket || io('/online_players');
         socket.emit('save_nickname', nickName);
 
         //TODO: Add bluebird 
@@ -65,8 +66,9 @@ function registerPlayer(nickName) {
             .on('player_offer_game', function (player) {
                 drawNotification($("#notificationsPanel"), player);
             })
-            .on('redirect_to_multiplayer', function (playerID) {
-                window.location.href = '/playerVsPlayer/' + playerID;
+            .on('redirect_to_multiplayer', function (playerId) {
+                var gameId = playerId + '_vs_' + socket.id;
+                window.location.href = '/playerVsPlayer/' + gameId;
             })
             .on('player_connected', function (player) {
                 $('#msgWaitForPlayers').hide();

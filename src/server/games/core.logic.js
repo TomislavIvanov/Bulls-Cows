@@ -1,8 +1,9 @@
+const digitsCount = 4;
+
 /**
  * Generate random number by digits count
- * @param {number} digitsCount - digits count of number.
  */
-function generateNumber(digitsCount) {
+function generateNumber() {
     var generatedDigits = [];
     var randomDigit;
     var start = 0;
@@ -37,9 +38,8 @@ function generateRandomNumberInRange(a, b) {
  * Compare two numbers and returns how many cows or/and bulls has the guessNumber in targetNumber.
  * @param {number} targetNumber - target number.
  * @param {number} guessNumber - guess number.
- * @param {number} digitsCount - numbers digits count
  */
-function matchNumber(targetNumber, guessNumber, digitsCount) {
+function matchNumber(targetNumber, guessNumber) {
     // Convert numbers to string to be able to use index operator
     var targetNumberAsString = targetNumber.toString();
     var guessNumberAsString = guessNumber.toString();

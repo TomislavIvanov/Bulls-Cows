@@ -1,4 +1,4 @@
-var socket = io();
+var socket = io('/player_guesses_number');
 	
 	socket.on('number_information', function (info) {
 		var numInfo = eval(info);

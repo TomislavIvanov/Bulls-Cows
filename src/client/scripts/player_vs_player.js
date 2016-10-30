@@ -1,6 +1,7 @@
 var socket = io('/player_vs_player');
 var playerNumber;
 
+socket.emit('join_game', gameId);
 socket
     .on('game_allowed', function (info) {
         $('#btnSubmitNum').removeClass('hidden');
@@ -110,7 +111,6 @@ $('#btnSaveNum').click(function () {
     }
 
     $('#txtNumber').prop('disabled', true);
-    //$('<strong>Your number is: </strong').insertBefore($('#txtNumber'));
     $(this).addClass('hidden');
     playerNumber = number;
 

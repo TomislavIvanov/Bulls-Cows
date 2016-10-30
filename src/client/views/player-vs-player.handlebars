@@ -28,8 +28,8 @@
 				<div class="bs-component">
 					<div class="panel panel-default">
 						<div class="panel-body" class="hidden">
-							<ol id="usersList">
-								You are playing playing against <strong> {{{otherPlayer}}} </strong>
+							<ol id="oppnentName">
+								You are playing against <strong> {{{opponentId}}} </strong>
 							</ol>
 						</div>
 					</div>
@@ -106,4 +106,7 @@
 <script src="/bower_components/jquery/dist/jquery.min.js"></script>
 <script src="/bower_components/bluebird/js/browser/bluebird.min.js"></script>
 <script src="/bower_components/jquery-ui/jquery-ui.min.js"></script>
+<script> 
+	var gameId = '{{{gameId}}}'; 
+</script>
 <script src="/scripts/player_vs_player.js"></script>
