@@ -15,6 +15,7 @@ require('./channels/player.guesses.number')(io);
 require('./channels/computer.guesses.number')(io);
 require('./channels/online.players.js')(io);
 require('./channels/player.vs.player.js')(io);
+require('./channels/n.players.vs.computer.js')(io);
 
 http.listen(port, function () {
     'use strict';

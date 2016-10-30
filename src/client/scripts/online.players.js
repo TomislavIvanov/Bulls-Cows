@@ -1,4 +1,5 @@
 var socket;
+var channelName = '/online_players';
 var playerNickName = localStorage['playerNickName'];
 // requir helpers
 
@@ -47,13 +48,13 @@ function onNickNameSaved(nickName) {
 function registerPlayer(nickName) {
     // validate user name
     if (nickName) {
-        socket = socket || io('/online_players');
+        socket = socket || io(channelName);
         socket.emit('save_nickname', nickName);
 
         //TODO: Add bluebird 
         onNickNameSaved(nickName)
         socket
-            .on('online_players', function (players) {
+            .on('current_online_players', function (players) {
                 if (players.length) {
                     $('#msgWaitForPlayers').hide();
                     $('#usersList').html('');

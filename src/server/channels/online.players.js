@@ -24,7 +24,7 @@ module.exports = function (io) {
                             return { id: currentID, name: onlinePlayers[currentID].name || currentID };
                         });
 
-                    player.emit('online_players', players)
+                    player.emit('current_online_players', players)
                 }
 
                 onlinePlayers[playerId].name = nickName;
