@@ -1,7 +1,6 @@
 <div class="container">
 	<div class="bs-docs-section">
 		<div class="row">
-			<!-- logo.nunjucks -->
 			<div class="col-lg-4">
 				<div class="page-header">
 					<div class="col-lg-4">
@@ -18,17 +17,9 @@
 					<p id="pageHeader" class="lead "></p>
 				</div>
 				<div class="bs-component">
-					<!--<div id="successMsgLbl" class="panel panel-success hidden">
-						<div class="panel-heading">
-							<h3 class="panel-title"></h3>
-						</div>
-						<div class="panel-body">
-							You guessed the number !!!
-						</div>
-					</div>
 					<div id="errorMsgLbl" class="alert alert-dismissible alert-danger hidden">
 						<p>Please enter valid number.</p>
-					</div>-->
+					</div>
 				</div>
 			</div>
 			<div class="col-lg-4">
@@ -141,10 +132,13 @@
 	</div>
 </div>
 <!-- include bower componets -->
-<!-- bowerComponents.nunjucks -->
 <script src="/bower_components/socket.io-client/socket.io.js"></script>
 <script src="/bower_components/jquery/dist/jquery.min.js"></script>
 <script src="/bower_components/bluebird/js/browser/bluebird.min.js"></script>
 <script src="/bower_components/jquery-ui/jquery-ui.min.js"></script>
-<script src="/scriipts/game.players.js"></script>
+<!-- TODO: Add module loader for better dependencies management -->
+<script src="/scripts/game.core.logic.js"></script>
+<script src="/scripts/game.panel.js"></script>
+<script src="/scripts/computer.guesses.logic.js"></script>
+<script src="/scripts/game.players.js"></script>
 <script src="/scripts/n.players.vs.computer.js"></script>

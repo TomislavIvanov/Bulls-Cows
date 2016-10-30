@@ -35,12 +35,24 @@ ComputerGuessesNumberGame.prototype.start = function () {
  */
 ComputerGuessesNumberGame.prototype.guessNumber = function (opponentsHints) {
     var tempSet = [];
+    var randomIndex = 0;
+
+    // If currentNumber is not set. Get random choice and return it without slicing the set
+    if (!this.currentNumber) {
+        randomIndex = generateRandomNumberInRange(0, this.numbersSet.length - 1);
+        this.currentNumber = this.numbersSet[randomIndex];
+
+        return this.currentNumber;
+    }
+
+    // If the currentNumber was beeing send
+    // By opponentHits slice the set and return new random number
     if (opponentsHints) {
         var cows = opponentsHints.cows * 1;
         var bulls = opponentsHints.bulls * 1;
         var newSet = [];
         for (var i = 0; i < this.numbersSet.length; i++) {
-            var matchResult = coreLogic.matchNumber(this.currentNumber, this.numbersSet[i]);
+            var matchResult = matchNumber(this.currentNumber, this.numbersSet[i]);
             if (matchResult.cows === cows && matchResult.bulls === bulls) {
                 tempSet.push(this.numbersSet[i]);
             }
@@ -48,10 +60,12 @@ ComputerGuessesNumberGame.prototype.guessNumber = function (opponentsHints) {
 
         this.numbersSet = tempSet;
         tempSet = [];
+
+        var randomIndex = generateRandomNumberInRange(0, this.numbersSet.length - 1);
+        this.currentNumber = this.numbersSet[randomIndex];
+
     }
 
-    var randomIndex = coreLogic.generateRandomNumberInRange(0, this.numbersSet.length - 1);
-    this.currentNumber = this.numbersSet[randomIndex];
-
     return this.currentNumber;
+
 }

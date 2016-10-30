@@ -7,7 +7,7 @@ var gamesList = {};
 module.exports = function (io) {
     var channelName = '/player_vs_player';
     io.of(channelName).on('connection', function onPlayerConnection(player) {
-        // Holds current joint player game
+        // Holds current joined player game
         var currentJoinedGameId;
         player
             .on('join_game', function onJoinGame(gameInfo) {

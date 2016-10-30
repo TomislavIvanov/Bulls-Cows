@@ -1,45 +1,49 @@
+// Use computer.guesses.logic.js
+// Use game.players.js
+// TODO add module loader
+
+// add all global variables
+// TODO wrap them in App object
 var socket = io('/n_players_vs_computer'),
+    playersFactory = new GamePlayerFactory(),
     playersList = [],
+    successBullsCount = 4,
     currentPlayerIndex = 0;
 
 socket.on('number_information', function (numInfo) {
-    var currentPanel = $('#player_' + (currentPlayerIndex + 1) + '_panel');
-    var rowsCount = $('#informationLog tr').length;
-    var bullsClass = numInfo.bulls > 0 ? 'warning' : '';
-    var cowsClass = numInfo.cows > 0 ? 'info' : '';
-    currentPanel.find('.numberInformationLog').append(
-        '<tr>' +
-        '<td>' + rowsCount + '</td>' +
-        '<td>' + numInfo.actualNumber + '</td>' +
-        '<td class="' + bullsClass + '">' + numInfo.bulls + '</td>' +
-        '<td class="' + cowsClass + '">' + numInfo.cows + '</td>' +
-        '</tr>'
-    );
+    var currentPlayer = window.playersList[currentPlayerIndex];
+    currentPlayer.panel.addRowToLog(numInfo.actualNumber, numInfo.bulls, numInfo.cows);
+    currentPlayer.panel.showLog();
+    currentPlayer.panel.enterNumber('');
 
-    currentPanel.find('.numberInformationLog').removeClass('hidden');
-    currentPanel.find('.txtNumber').val('');
-
-    if (numInfo.bulls === numInfo.actualNumber.toString().length) {
-        currentPanel.find('.winGameMsgLbl').removeClass('hidden');
-        currentPanel.find('.numberInformationLog').addClass('hidden')
-        currentPanel.find('.btnNextPlayer').addClass('hidden');
-        currentPanel.find('button.btnSubmitNum').addClass('hidden');
-        currentPanel.find('.txtNumber').addClass('hidden');
+    if (numInfo.bulls === successBullsCount) {
+        currentPlayer.panel.showWinMessage();
+        currentPlayer.panel.hideLog();
+        currentPlayer.panel.hideBtnNext();
+        currentPlayer.panel.hideBtnSubmit();
+        currentPlayer.panel.hideTxtNumber();
         return;
     }
 
-    currentPanel.find('.btnNextPlayer').removeClass('hidden');
+    currentPlayer.panel.showBtnNext();
 });
 
 $('#btnSavePlayersCount').on('click', function (e) {
-    $('#configPlayerGroup').removeClass('hidden');
-    $('#inputPlayersCount').prop('disabled', true);
-    $(this).addClass('hidden');
-    $('#informationLog').removeClass('hidden');
+    var playersCount = $('#inputPlayersCount').val() * 1;
+
+    if (playersCount) {
+        $('#configPlayerGroup').removeClass('hidden');
+        $('#inputPlayersCount').prop('disabled', true);
+        $(this).addClass('hidden');
+        $('#informationLog').removeClass('hidden');
+    } else {
+        alert('Enter number bigger then zero');
+    }
+
 });
 
 $('#btnAddPlayer').on('click', function () {
-    var currentPlayerNum = playersList.length + 1;
+    var currentPlayerNum = window.playersList.length + 1;
     var currentPlayerType = $('#playerType').val();
     var currentPlayerName = $('#currentPlayerName').val();
     var typeClass = currentPlayerType === 'human' ? 'info' : 'warning';
@@ -51,13 +55,14 @@ $('#btnAddPlayer').on('click', function () {
         '<td class="' + typeClass + '">' + currentPlayerType + '</td>' +
         '</tr>'
     );
+
     $('#currentPlayerName').val('');
 
-    playersList.push({ name: currentPlayerName, type: currentPlayerType });
+    window.playersList.push(playersFactory.createPlayer(currentPlayerName, currentPlayerType));
     var choosenPlayersCount = $('#inputPlayersCount').val() * 1;
 
-    // When last player is added shwo "Start game" button
-    if (playersList.length == choosenPlayersCount) {
+    // When last player is added show "Start game" button
+    if (window.playersList.length == choosenPlayersCount) {
         $('#btnStartGame').removeClass('hidden');
         $('#configPlayerGroup').addClass('hidden');
         $(this).addClass('hidden');
@@ -68,59 +73,47 @@ $('#btnAddPlayer').on('click', function () {
 $('#btnStartGame').on('click', function () {
     $('#gameSettingsSection').addClass('hidden');
 
-    playersList.forEach(function (currenPlayer, playerIndex) {
-        var playerPanelId = 'player_' + (playerIndex + 1) + '_panel';
-        $("#playerGameTemplate")
+    window.playersList.forEach(function (currentPlayer, playerIndex) {
+        //var playerPanelId = 'player_' + (playerIndex + 1) + '_panel';
+
+        currentPlayer.setPanel(new GamePanel(($("#playerGameTemplate")
             .clone()
-            .attr('id', playerPanelId)
-            //.removeClass('hidden')
-            .insertBefore("#gameSettingsSection");
+            //.attr('id', playerPanelId)
+            .insertBefore("#gameSettingsSection")
+        )));
 
-        var currentPanel = $('#' + playerPanelId); 
         // attach callbacks to each panel
-        currentPanel.find('button.btnSubmitNum').on('click', function (e) {
-            var number = $(this).parent().parent().find('input').val() * 1;
-            $('#errorMsgLbl').addClass('hidden');
-            // validate number
-            if (isNaN(number)) {
-                $('#errorMsgLbl').removeClass('hidden');
-                return;
-            }
-
-            if (number < 999) {
-                $('#errorMsgLbl').removeClass('hidden');
-                return;
-            }
-
+        currentPlayer.panel.attachOnSubmitNumberHandler(function (number) {
             socket.emit('match_number', number);
-            $('#informationLog').removeClass('hidden');
         });
 
-        currentPanel.find('button.btnNextPlayer').on('click', function (e) {
-            currentPanel.addClass('hidden');
-            if(currentPlayerIndex === playersList.length - 1) {
-                currentPlayerIndex = 0;
+        currentPlayer.panel.attachOnNextPlayerClickHandler(function () {
+            if (currentPlayerIndex === window.playersList.length - 1) {
+                window.currentPlayerIndex = 0;
             } else {
-                currentPlayerIndex++;
+                window.currentPlayerIndex++;
             }
 
-            $('#pageHeader').html('It is <strong>' + playersList[currentPlayerIndex].name + '</strong> turn.');
-            $('#player_' + (currentPlayerIndex + 1) + '_panel').removeClass('hidden'); 
+            updateHeader(window.playersList[window.currentPlayerIndex].name);
+
+            window.playersList[currentPlayerIndex].panel.show();
+            window.playersList[currentPlayerIndex].giveSuggestion();
         });
+
+
+        currentPlayer.start();
     });
 
     // Show first player panel
-    currentPlayerIndex = 0;
-    $('#player_1_panel').removeClass('hidden');
-    $('#pageHeader').html('It is <strong>' + playersList[0].name + '</strong> turn.');
+    window.currentPlayerIndex = 0;
+    var currentPlayer = window.playersList[window.currentPlayerIndex];
+    currentPlayer.panel.show();
+    updateHeader(currentPlayer.name);
+    currentPlayer.giveSuggestion();
 
     socket.emit('start_game');
 });
 
-function startGame() {
-    while (true) {
-        playersList.forEach(function (currenPlayer) {
-            $("#playerGameTemplate").clone().prependTo("#gameSettingsSection");
-        });
-    }
+function updateHeader(playerName) {
+    $('#pageHeader').html('It is <strong>' + playerName + '</strong> turn.');
 }
